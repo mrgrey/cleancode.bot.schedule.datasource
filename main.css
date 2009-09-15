@@ -1,0 +1,26 @@
+/* 
+    Document   : main
+    Created on : 16.09.2009, 2:00:27
+    Author     : mrgrey
+    Description:
+        Purpose of the stylesheet follows.
+*/
+.form {
+	float:left;
+}
+.form .field {
+	clear:both;
+	text-align:right;
+	line-height: 25px;
+}
+.form label {
+	float:left;
+	padding-right: 10px;
+}
+.clear {
+	clear: both;
+}
+TABLE,TR,TD,TH {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
