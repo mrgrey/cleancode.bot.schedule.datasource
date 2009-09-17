@@ -41,6 +41,9 @@
 						)
 					);
 			}
+		} else if ($_REQUEST['action'] == 'delete') {
+			$record_id = intval($_REQUEST['record_id']);
+			$db->send_query("DELETE FROM `Schedule` WHERE `Id`='{$record_id}'");
 		}
         ?>
 		<form method="POST" action="./index.php">
@@ -105,17 +108,20 @@
 			foreach($data as $current_record) :
 			?>
 			<tr>
-				<? 
-				foreach($current_record as $field_name => $field_data) :
-					if(in_array($field_name, $allowed_keys)) :
-				?>
-					<td>
-						<?= $field_data; ?>
-					</td>
-				<?
-					endif;
-				endforeach;
-				?>
+				<? foreach($current_record as $field_name => $field_data) : ?>
+					<? if(in_array($field_name, $allowed_keys)) : ?>
+						<td>
+							<?= $field_data; ?>
+						</td>
+					<? endif; ?>
+				<? endforeach; ?>
+				<td>
+					<form method="POST" action="./index.php">
+						<input type="hidden" name="action" value="delete" />
+						<input type="hidden" name="record_id" value="<?= $current_record['Id'] ?>" />
+						<input type="submit" value="Удалить" onclick="return confirm('Вы действительно хотите удалить запись?');" />
+					</form>
+				</td>
 			</tr>
 		<? endforeach; ?>
 		</table>

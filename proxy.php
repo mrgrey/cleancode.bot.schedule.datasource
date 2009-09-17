@@ -24,7 +24,7 @@ if(empty($date) && empty($group_number)) {
 		$first_week_sunday_timestamp = date('U', mktime(0, 0, 0, 9, 1 - $first_september_day_of_week, 2009));
 
 		$week_number = floor(($query_time - $first_week_sunday_timestamp) / 604800) + 1; //Magic number is 7*24*60*60
-		$week_type = $week_number % 2 + 1;
+		$week_type = $week_number % 2 == 0 ? 2 : 1;
 
 		$db_data = $db->get_data_array_from_db(
 			"SELECT * FROM `Schedule` WHERE
