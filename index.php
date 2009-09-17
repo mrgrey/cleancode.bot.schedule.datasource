@@ -14,8 +14,8 @@
 		if($_REQUEST['action'] == 'add') {
 			if(
 				!empty($_REQUEST['group_number']) &&
-				!empty($_REQUEST['week_type']) &&
-				!empty($_REQUEST['day_of_week']) &&
+				isset($_REQUEST['week_type']) &&
+				isset($_REQUEST['day_of_week']) &&
 				!empty($_REQUEST['subject'])
 			) {
 				$db->send_query(
@@ -87,6 +87,7 @@
 					<label for="person">Преподаватель:</label>
 					<input type="text" name="person" />
 				</div>
+				<input type="submit" />
 			</fieldset>
 		</form>
 		<div class="clear"></div>
