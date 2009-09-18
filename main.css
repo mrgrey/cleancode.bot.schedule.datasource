@@ -17,6 +17,12 @@
 	float:left;
 	padding-right: 10px;
 }
+.form SELECT {
+	width: 185px;
+}
+.form INPUT[type=text] {
+	width: 185px;
+}
 .clear {
 	clear: both;
 }
