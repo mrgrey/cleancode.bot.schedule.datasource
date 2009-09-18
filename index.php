@@ -1,3 +1,9 @@
+<?
+	@session_start();
+	if(empty($_SESSION['auth'])) {
+		header("Location: auth.php");
+	}
+?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
@@ -6,12 +12,12 @@
         <title></title>
     </head>
     <body>
-        <?php
+		<?
 		require_once('config.php');
 		require_once('DBWrapper.php');
 		$db = new DBWrapper(SERVER, USERNAME, PASSWORD, DB_NAME);
 
-		if($_REQUEST['action'] == 'add') {
+		if($_REQUEST['action'] == 'add' && isset($_SESSION['auth'])) {
 			if(
 				!empty($_REQUEST['group_number']) &&
 				isset($_REQUEST['week_type']) &&
@@ -28,10 +34,10 @@
 						`Place`,
 						`Subject`,
 						`Person`)
-					VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+					VALUES ('??', '??', '??', '??', '??', '??', '??', '??')",
 					array(
-						SCHEDULE_ID,
-						intval($_REQUEST['group_number']),
+						intval($_SESSION['auth']['ScheduleId']),
+						intval($_S['group_number']),
 						intval($_REQUEST['week_type']),
 						intval($_REQUEST['day_of_week']),
 						$_REQUEST['time'],
@@ -41,11 +47,12 @@
 						)
 					);
 			}
-		} else if ($_REQUEST['action'] == 'delete') {
+		} else if ($_REQUEST['action'] == 'delete' && isset($_SESSION['auth'])) {
 			$record_id = intval($_REQUEST['record_id']);
-			$db->send_query("DELETE FROM `Schedule` WHERE `Id`='{$record_id}'");
+			$schedule_id = intval($_SESSION['auth']['ScheduleId']);
+			$db->send_query("DELETE FROM `Schedule` WHERE `Id`='??' AND `ScheduleId`='??'", $record_id, $schedule_id);
 		}
-        ?>
+		?>
 		<form method="POST" action="./index.php">
 			<fieldset class="form">
 				<legend>Новая запись в расписании</legend>
@@ -95,21 +102,32 @@
 		</form>
 		<div class="clear"></div>
 		<table>
-			<? $allowed_keys = array('GroupNumber', 'WeekType', 'DayOfWeek', 'Time', 'Place', 'Subject', 'Person'); ?>
+			<? 
+			$schedule_id = intval($_SESSION['auth']['ScheduleId']);
+			$allowed_keys = array(
+				'GroupNumber' => 'Номер группы',
+				'WeekType' => 'Тип недели',
+				'DayOfWeek' => 'День недели',
+				'Time' => 'Время',
+				'Place' => 'Место',
+				'Subject' => 'Предмет',
+				'Person' => 'Преподаватель');
+
+			?>
 			<tr>
-				<? foreach($allowed_keys as $key) : ?>
+				<? foreach($allowed_keys as $key => $value) : ?>
 					<th>
-						<?= $key ?>
+						<?= $value ?>
 					</th>
 				<? endforeach; ?>
 			</tr>
 			<?
-			$data = $db->get_data_array_from_db("SELECT * FROM `Schedule` WHERE `ScheduleId`='%s' ORDER BY `GroupNumber`,`DayOfWeek`", SCHEDULE_ID);
+			$data = $db->get_data_array_from_db("SELECT * FROM `Schedule` WHERE `ScheduleId`='??' ORDER BY `GroupNumber`,`DayOfWeek`", $schedule_id);
 			foreach($data as $current_record) :
 			?>
 			<tr>
 				<? foreach($current_record as $field_name => $field_data) : ?>
-					<? if(in_array($field_name, $allowed_keys)) : ?>
+					<? if(in_array($field_name, array_keys($allowed_keys))) : ?>
 						<td>
 							<?= $field_data; ?>
 						</td>

@@ -28,13 +28,13 @@ if(empty($date) && empty($group_number)) {
 
 		$db_data = $db->get_data_array_from_db(
 			"SELECT * FROM `Schedule` WHERE
-				`ScheduleId` = '%s'
-				AND `GroupNumber` = '%s' 
+				`ScheduleId` = '??'
+				AND `GroupNumber` = '??'
 				AND (
-					`WeekType` = '%s'
+					`WeekType` = '??'
 					OR `WeekType` = '0'
 					)
-				AND `DayOfWeek` = '%s'",
+				AND `DayOfWeek` = '??'",
 			array(SCHEDULE_ID, $group_number, $week_type, $day_of_week));
 		if(count($db_data) == 0) {
 			$data = array(

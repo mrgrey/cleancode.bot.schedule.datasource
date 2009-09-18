@@ -1,6 +1,6 @@
 <?php
 /**
- * Description of DBWrapper
+ * Класс реализует обертку для запросов к БД с использованием плэйсхолдеров
  *
  * @author mrgrey
  */
@@ -30,7 +30,7 @@ class DBWrapper {
 			$placeholders_data = array($placeholders_data);
 		}
 
-		$placeholders_count = substr_count($query, "%s");
+		$placeholders_count = substr_count($query, "??");
 		if($placeholders_count != count($placeholders_data)) {
 			return false;
 		}
@@ -42,7 +42,7 @@ class DBWrapper {
 		}
 
 		for($i = 0; $i < $placeholders_count; $i++) {
-			$position = strpos($query, "%s");
+			$position = strpos($query, "??");
 			$query = substr_replace($query, $placeholders_data[$i], $position, 2);
 		}
 
