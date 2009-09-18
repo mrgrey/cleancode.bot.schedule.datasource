@@ -26,7 +26,7 @@ class DBWrapper {
 			die("Not connected!");
 		}
 
-		if(is_scalar($placeholders_data)) {
+		if(!is_array($placeholders_data)) {
 			$placeholders_data = array($placeholders_data);
 		}
 
