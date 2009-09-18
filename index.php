@@ -63,7 +63,7 @@ function parse_field_value($field_name, $field_value) {
 		} else if ($_REQUEST['action'] == 'delete' && isset($_SESSION['auth'])) {
 			$record_id = intval($_REQUEST['record_id']);
 			$schedule_id = intval($_SESSION['auth']['ScheduleId']);
-			$db->send_query("DELETE FROM `Schedule` WHERE `Id`='??' AND `ScheduleId`='??'", $record_id, $schedule_id);
+			$db->send_query("DELETE FROM `Schedule` WHERE `Id`='??' AND `ScheduleId`='??'", array($record_id, $schedule_id));
 		}
 		?>
 		<form method="POST" action="./index.php">
