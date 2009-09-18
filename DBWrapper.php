@@ -2,18 +2,40 @@
 /**
  * Класс реализует обертку для запросов к БД с использованием плэйсхолдеров
  *
+ * @todo Избавиться от die! Класс, убивающий веб-приложение при невозможности соединиться с базой - это недопустимо в очень большом круге задач.
  * @author mrgrey
  */
 class DBWrapper {
+	/**
+	* Подключение к серверу
+	* 
+	* @var resource
+	*/
 	static $link;
+	/**
+	* Счетчик произведенных запросов
+	* 
+	* @var mixed
+	*/
 	static $query_counter;
 
+	/**
+	* Конструктор класса
+	* 
+	* @param string $server адрес сервера (имя хоста/ip адрес)
+	* @param string $username имя пользователя 
+	* @param string $password пароль
+	* @param string $db_name имя базы данных
+	* @return DBWrapper
+	*/
 	public function  __construct($server, $username, $password, $db_name) {
 		self::$link = mysql_connect($server, $username, $password);
 		if (!self::$link) {
+			//WTF????
 			die('Could not connect to mysql server: ' . mysql_error());
 		}
 		if(! mysql_select_db($db_name, self::$link) ) {
+			//WTF????
 			die('Could not use db: ' . mysql_error());
 		}
 
@@ -21,8 +43,16 @@ class DBWrapper {
 		self::$query_counter++;
 	}
 
+	/**
+	* Функция посылает запрос
+	* 
+	* @param string $query запрос, при необходимости содержащий плейсхолдеры
+	* @param mixed $placeholders_data массив значений, подставлемых в запрос (едининичное значение)
+	* @return resource
+	*/
 	public function send_query($query, $placeholders_data = array()) {
 		if(!isset(self::$link)) {
+			//WTF????
 			die("Not connected!");
 		}
 
@@ -50,6 +80,13 @@ class DBWrapper {
 		return mysql_query($query);
 	}
 
+	/**
+	* Выполняет QUERY запрос и возвращает полученные значения в соответствии с указанным типом возвращаемых данных
+	* 
+	* @param string $query запрос, при необходимости содержащий плейсхолдеры
+	* @param mixed $placeholders_data массив значений, подставлемых в запрос (едининичное значение)
+	* @param mixed $return_type тип возвращаемых данных, см mysql_fetch_array()
+	*/
 	public function get_data_array_from_db($query, $placeholders_data = array(), $return_type = MYSQL_ASSOC) {
 		$query_result = $this->send_query($query, $placeholders_data);
 		if($query_result === false) {
